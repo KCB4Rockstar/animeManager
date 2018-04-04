@@ -1,0 +1,16 @@
+{% extends 'animes/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+- Catalog
+{% endblock %}
+
+{% block navbar %}
+{% include "navbar.html" with active='home' %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <h2 class="content-heading">WELCOME TO ANIME MANAGER</h2>
+</div>
+{% endblock %}

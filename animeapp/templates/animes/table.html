@@ -1,0 +1,38 @@
+{% extends "animes/base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+- Catalog
+{% endblock %}
+
+{% block navbar %}
+{% include "navbar.html" with active='table' %}
+{% endblock %}
+
+{% block content %}
+<table id = "table">
+    <thead>
+        <tr>
+            <td> anime id </td>
+            <td> Name</td>
+            <td> Genre</td>
+            <td> Type</td>
+            <td> Episodes</td>
+            <td> Rating</td>
+            <td> Members </td>
+        </tr>
+    </thead>
+    <tbody id = "body">
+        
+    </tbody>
+</table>
+<script src = "{% static 'js/readData.js' %}"></script>
+{% endblock %}
+
+{% block js %}
+<script>
+    $("#id_username").change(function () {
+        console.log( $(this).val() );
+    });
+</script>
+{% endblock %}

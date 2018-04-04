@@ -1,0 +1,21 @@
+{% extends 'animes/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+- Add Anime
+{% endblock %}
+
+{% block navbar %}
+{% include "navbar.html" with active='add' %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h2 class="content-heading">Add Anime</h2>
+    </div>
+</div>
+<div class="row">
+    <h3>A form should come here</h3>
+</div>
+{% endblock %}

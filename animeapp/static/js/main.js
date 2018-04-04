@@ -1,0 +1,1 @@
+console.log("Hello visitors! Nice of you to check out our console...but why?");
