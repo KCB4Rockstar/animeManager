@@ -123,9 +123,8 @@ def loadImages(request):
     
     for i in range(0, len(animes)):
         if animes[i].photoCover == "":
-            animeID = str(animes[i].id).replace("-", "")
-            obj = Anime.objects.get(id__iexact = animeID)
             try:
+                obj = Anime.objects.get(id = animes[i].id)
                 searchName = re.sub('[^A-Za-z0-9]+', '', obj.name)
                 searchName = searchName.split()
                 searchName='+'.join(searchName)
@@ -134,7 +133,6 @@ def loadImages(request):
                 
                 htmlText = BeautifulSoup(urlopen(Request(url,headers=headers)),'html.parser')
                 img = htmlText.find("div",{"class":"rg_meta"})
-                print(htmlText)
                 imgURL = json.loads(img.text)["ou"]
                 obj.photoCover = imgURL
             except:
