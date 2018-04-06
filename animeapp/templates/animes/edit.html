@@ -15,7 +15,15 @@
         <h2 class="content-heading">Edit Anime</h2>
     </div>
 </div>
-<div class="row">
-    <h3>A form should come here</h3>
+
+<div class="row w">
+    <form method = "POST">
+  		{% csrf_token %}
+    	{{ update_form.as_p }}
+
+    	<button type = "submit" class = "btn btn-primary">Update</button>
+    	<button type = "reset" value = "reset" class = "btn btn-caution">Cancel</button>
+    </form>
 </div>
 {% endblock %}
+

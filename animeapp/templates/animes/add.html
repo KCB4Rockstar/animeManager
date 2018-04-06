@@ -15,7 +15,13 @@
         <h2 class="content-heading">Add Anime</h2>
     </div>
 </div>
-<div class="row">
-    <h3>A form should come here</h3>
+<div class="row w">
+    <form method = "POST">
+    	{% csrf_token %}
+    	{{ add_form.as_p }}
+
+    	<button type = "submit" value = "submit" class = "btn btn-primary">Submit Anime</button>
+    	<a href="/adminsettings/"><div class = "btn btn-danger">Cancel</div></a>
+    </form>
 </div>
-{% endblock %}
+{% endblock  %}

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark center">
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark center">
     <a class="navbar-brand heading" href="/">Anime Manager</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -10,19 +10,24 @@
                 <a class="nav-link" href="/catalog/">Catalog {% if active == 'catalog' %} <span class="sr-only">(current)</span> {% endif %}</a>
             </li>
             {% if user.is_authenticated %}
+            <li class="{% if active == 'admin' or active == 'add' or active == 'edit' or active == 'delete' %} active {% endif %}nav-item">
+                <a class="nav-link" href="/adminsettings/">Admin Options {% if active == 'admin' %} <span class="sr-only">(current)</span> {% endif %}</a>
+            </li>
+            {% if active == 'add' %}
             <li class="{% if active == 'add' %} active {% endif %}nav-item">
                     <a class="nav-link" href="/add/">Add Anime {% if active == 'add' %} <span class="sr-only">(current)</span> {% endif %}</a>
             </li>
-            <li class="{% if active == 'edit' %} active {% endif %}nav-item">
-                    <a class="nav-link" href="/edit/">Edit Anime {% if active == 'edit' %} <span class="sr-only">(current)</span> {% endif %}</a>
+            {% endif %}
+            {% if active == 'edit' %}
+            <li class="active nav-item">
+                    <a class="nav-link" href="#">Edit Anime<span class="sr-only">(current)</span></a>
             </li>
-            <li class="{% if active == 'delete' %} active {% endif %}nav-item">
-                    <a class="nav-link" href="/delete/">Delete Anime {% if active == 'delete' %} <span class="sr-only">(current)</span> {% endif %}</a>
+            {% endif %}
+            {% if active == 'delete' %}
+            <li class="active nav-item">
+                    <a class="nav-link" href="/delete/">Delete Anime<span class="sr-only">(current)</span></a>
             </li>
-            {% else %}
-            <li class="{% if active == 'wut' %} active {% endif %}nav-item">
-                <a class="nav-link" href="/delete/">JPJW Anime {% if active == 'wut' %} <span class="sr-only">(current)</span> {% endif %}</a>
-            </li>
+            {% endif %}
             {% endif %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -34,12 +39,15 @@
                     <a class="dropdown-item" target="_blank" href="http://masterani.me">Master Anime</a>
                 </div>
             </li>
-            <li class="{% if active == 'login' %} active {% endif %}nav-item">
-                <a class="nav-link" href="/accounts/login/">Login {% if active == 'login' %} <span class="sr-only">(current)</span> {% endif %}</a>
-            </li>
+            {% if user.is_authenticated %}
             <li class="{% if active == 'signup' %} active {% endif %}nav-item">
-                    <a class="nav-link disabled" href="#">Sign Up {% if active == 'signup' %} <span class="sr-only">(current)</span> {% endif %}</a>
-                </li>
+                <a class="nav-link" href="{% url 'logout' %}">Logout {% if active == 'logout' %} <span class="sr-only">(current)</span> {% endif %}</a>
+            </li>
+            {% else %}
+            <li class="{% if active == 'login' %} active {% endif %}nav-item">
+                <a class="nav-link" href="{% url 'login'%}">Login {% if active == 'login' %} <span class="sr-only">(current)</span> {% endif %}</a>
+            </li>
+            {% endif %}
         </ul>
     </div>
 </nav>

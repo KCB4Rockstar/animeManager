@@ -1,11 +1,5 @@
-{% extends 'registration/base.html' %}
-
-{% block navbar %}
-{% include "navbar.html" with active='logout' %}
-{% endblock %}
+{% extends "registration/base.html" %}
 
 {% block content %}
-<p>Logged out!</p>  
-
-<a href="{% url 'login'%}">Click here to login again.</a>
+<p class="w center">Logged out!</p>
 {% endblock %}

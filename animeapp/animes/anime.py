@@ -34,7 +34,7 @@ class Anime(models.Model):
     rating = FloatField()
     members = IntegerField()
     created = DateTimeField(auto_now_add=True)
-    photoCover = ImageField(null=True, upload_to="img/covers", verbose_name="cover photo", blank=True)
+    photoCover = ImageField(null=True, upload_to="img/covers", max_length=1000, verbose_name="cover photo", blank=True)
 
     class Meta:
         ordering = ("rating",)

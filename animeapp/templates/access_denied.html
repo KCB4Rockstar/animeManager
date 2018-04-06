@@ -1,0 +1,26 @@
+{% extends 'animes/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}
+- Access Denied
+{% endblock %}
+
+{% block navbar %}
+{% include "navbar.html" with active='access_denied' %}
+{% endblock %}
+
+{% block content %}
+<br><br>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">RESTRICTED ACCESS</h5>
+        <p class="card-text">
+            Only authenticated users are allowed to access this content.
+            <br>
+            Please sign in if you are authenticated or return to browsing the animes.</p>
+        <a href = "/accounts/login"><button type = "button" class = "btn btn-primary">Login</button></a>
+        <a href = "/catalog/"><button type = "button" class = "btn btn-danger">Return</button></a>
+    </div>
+</div>
+{% endblock %}

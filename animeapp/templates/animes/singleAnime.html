@@ -1,0 +1,62 @@
+{% extends 'animes/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+- {{anime.name}}
+{% endblock %}
+
+{% block navbar %}
+{% include "navbar.html" with active='catalog' %}
+{% endblock %}
+
+{% block content %}
+<h1 class="animeTitle">{{ anime.name }}</h1>
+<div class="row">
+    <div class="col-lg-4 col-xs-12 animeImg">
+        {% if anime.photoCover %}
+        <img class="img-fluid" src="{{anime.photoCover}}" alt="{{anime.name}} image failed to load">
+        {% else %}
+        <img class="img-fluid" src="{% static 'img/noPhoto.png' %}" alt="No photo available">
+        {% endif %}
+    </div>
+    <div class="col-lg-8 col-xs-12 animeDetails minaFont">
+        <h3 class="">Genre: {{anime.genre}}</h3>
+        <br>
+        <h3 class="">Type: {{anime.animeType}}</h3>
+        <br>
+        <h3 class="">Episodes: {{anime.episodes}}</h3>
+        <br>
+        <h3 class="">Rating: {{anime.rating}}</h3>
+        <br>
+        <h3 class="">Members: {{anime.members}}</h3>
+        <br>
+    </div>
+</div>
+{% if user.is_authenticated %}
+<br><br>
+<div class="row center">
+    <div class="container">
+        <h2 class="w minaFont">Admin Options</h2>
+        <br>
+        <a href="/catalog/anime/{{anime.id}}/edit/"> <button type="button" class = "btn btn-primary">Update</button></a>
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{anime.id}}">Delete</button>
+        <div class="modal fade" id="{{anime.id}}" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Delete Anime</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="minaFont">Are you sure you want to delete {{anime.name}}?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/catalog/anime/{{anime.id}}/delete/"><button type="button" class="btn btn-danger">Delete</button></a>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+</div>
+{% endif %}
+{% endblock %}
