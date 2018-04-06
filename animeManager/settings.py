@@ -28,7 +28,10 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '657acya7xzppcq*k-=okffw3)&u4r=
 #DEBUG = True
 DEBUG = bool( os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = ["animemanager-kcb.herokuapp.com"]
+ALLOWED_HOSTS = [
+    "animemanager-kcb.herokuapp.com",
+    "127.0.0.1"
+]
 
 
 # Application definition
