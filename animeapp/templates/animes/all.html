@@ -57,7 +57,7 @@
         <div class="card minaFont">
             <a href="/catalog/anime/{{anime.id}}" class="nolink">
                 {% if anime.photoCover %}
-                <img class="card-img-top img-fluid" src="{{anime.photoCover}}" alt="{{anime.name}} image failed to load">
+                <img class="card-img-top " src="{{anime.photoCover}}" alt="{{anime.name}} image failed to load">
                 {% else %}
                 <img class="card-img-top img-fluid" src="{% static 'img/noPhoto.png' %}" alt="No photo available">
                 {% endif %}

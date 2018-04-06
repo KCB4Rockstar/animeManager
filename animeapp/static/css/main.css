@@ -34,8 +34,15 @@ body{
 
 .card:hover{
     background: #353535;
-    color: white;
     border-color: #0275d8;
+}
+
+.card:hover .card-title{
+    color:white;
+}
+
+.card:hover > button{
+    background: #353535;
 }
 
 .card-img-top{
@@ -47,6 +54,7 @@ body{
 
 .card-body{
     text-align: center;
+    color: #353535;
 }
 
 .card-title{
@@ -56,6 +64,7 @@ body{
 
 .modal{
     color: #353535;
+    text-align: center;
 }
 
 .paginationNav{
@@ -131,6 +140,10 @@ body{
 
 .animeImg img{
     border: 2px solid #0275d8;
+    min-height: 400px;
+    max-height: 420px;
+    /* object-fit: scale-down; */
+    object-fit: cover;
 }
 
 .dropdown-menu{
