@@ -1,26 +1,26 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import generic
 from django.http import HttpResponseRedirect, JsonResponse
 from django.conf import settings
+from .forms import DocumentForm, AddAnime
 import os
 import re
 import json
 import urllib
 import csv
 from . models import Anime
-from .animes import AddAnime, Anime
+from .animes import Anime
 from csv import reader
 from bs4 import BeautifulSoup
 from urllib.request import urlopen, Request
+from random import randint
 
 #from django.contrib.auth.models import User
-#from django.core.files import File
 
 # Create your views here.
 
 
-def landingPage(request):
-    return render(request, 'animes/landing.html')
+#----------SORTING CLASS VIEWS---------------
 
 class viewAnimesByCreated(generic.ListView):
     model = Anime
@@ -64,6 +64,18 @@ class viewAnimesByRating(generic.ListView):
     ordering = ['-rating']
     template_name = 'animes/all.html'
 
+class viewAnimesBySearch(generic.ListView):
+    paginate_by = 48
+    context_object_name = 'animes'
+    template_name = 'animes/all.html'
+
+    def get_queryset(self):
+        querystring = self.request.GET.get("searchBar")
+        return Anime.objects.filter(name__icontains = querystring)
+
+
+#----------FILE MANIPULATION FUNCTIONS---------
+
 def readCSVtoDatabase(request):
     def isFloat(n):
         try:
@@ -74,18 +86,19 @@ def readCSVtoDatabase(request):
 
     numAnimes = Anime.objects.all().count()
 
-    if(numAnimes==0):
-        fp = open(os.path.join(settings.MEDIA_ROOT, 'anime.csv'))
-        data = fp.read()
-        raw_record_row = []
-        raw_record_row = data.split("\n")
-        fp.close()
-        records = []
-        for val in reader(raw_record_row, dialect=csv.excel):
-            records.append(val)
-        #for i in range(1, len(records)):
-        for i in range(1, 100):
-            if(len(records[i])==7):
+    fp = open(os.path.join(settings.MEDIA_ROOT, 'anime.csv'))
+    data = fp.read()
+    raw_record_row = []
+    raw_record_row = data.split("\n")
+    fp.close()
+    records = []
+    for val in reader(raw_record_row, dialect=csv.excel):
+        records.append(val)
+    
+    for i in range(1, len(records)):
+        if(len(records[i])==7):
+            existing = Anime.objects.filter(name__iexact=records[i][1].replace("&#039;","'")).count()
+            if(existing==0):
                 if(records[i][2]==""):
                     g = "Unknown"
                 else:
@@ -111,46 +124,24 @@ def readCSVtoDatabase(request):
                 obj = Anime.objects.create(name=records[i][1].replace("&#039;","'"), genre=g, animeType=t, episodes=eps, rating=rate, members=mems)
                 obj.save()
 
-    else:
-        print("Database already loaded.")
-    return HttpResponseRedirect("/catalog/")
-
-def loadImages(request):
-    queryAnimes = Anime.objects.all()
-    animes = []
-    for i in queryAnimes:
-        animes.append(i)
-    
-    for i in range(0, len(animes)):
-        if animes[i].photoCover == "":
-            try:
-                obj = Anime.objects.get(id = animes[i].id)
-                searchName = re.sub('[^A-Za-z0-9]+', '', obj.name)
-                searchName = searchName.split()
-                searchName='+'.join(searchName)
-                url = "http://www.google.com/search?q="+searchName+"+myanimelist"+"&tbm=isch"
-                headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-                
-                htmlText = BeautifulSoup(urlopen(Request(url,headers=headers)),'html.parser')
-                img = htmlText.find("div",{"class":"rg_meta"})
-                imgURL = json.loads(img.text)["ou"]
-                obj.photoCover = imgURL
-            except:
-                obj.photoCover = ""
-            obj.save()
-
     return HttpResponseRedirect("/adminsettings/")
 
-def clearDatabase(request):
-    if Anime.objects.all().count() > 0:
-        Anime.objects.all().delete()
-    return HttpResponseRedirect("/adminsettings/")
-
-def loadTablePage(request):
-    if request.user.is_authenticated:
-        return render(request, 'animes/table.html')
+def uploadCSV(request):
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            writeCSV(request.FILES['csvFile'])
+            return HttpResponseRedirect("/adminsettings/")
     else:
-        return HttpResponseRedirect("/access_denied/")
+        form = DocumentForm()
+    return render(request, 'uploadCSV.html', {
+        'form': form
+    })
+
+def writeCSV(f):
+    with open(os.path.join(settings.MEDIA_ROOT, 'anime.csv'), 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 def loadTable(request):
     if request.user.is_authenticated:
@@ -165,11 +156,37 @@ def loadTable(request):
     else:
         return HttpResponseRedirect("/access_denied/")
 
-def singlePage(request, animeID):
-    result = Anime.objects.get(id = animeID)
-    return render(request, "animes/singleAnime.html", {
-        "anime": result
-    })
+#---------DATABASE MANIPULATION FUNCTIONS----------
+
+def loadImages(request):
+    queryAnimes = Anime.objects.filter(photoCover__iexact = "")
+    animes = []
+    for i in queryAnimes:
+        animes.append(i)
+    
+    for i in range(0, len(animes)):
+        if animes[i].photoCover == "":
+            try:
+                obj = Anime.objects.get(id = animes[i].id)
+                searchName = re.sub('[^A-Za-z0-9]+', '', obj.name)
+                searchName = searchName.split()
+                searchName='+'.join(searchName)
+                url = "http://www.google.com/search?q="+searchName+"+anime+picture"+"&tbm=isch"
+                headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+                
+                img = BeautifulSoup(urlopen(Request(url,headers=headers)),'html.parser').find("div",{"class":"rg_meta"})
+                imgURL = json.loads(img.text)["ou"]
+                obj.photoCover = imgURL
+            except:
+                obj.photoCover = ""
+            obj.save()
+
+    return HttpResponseRedirect("/adminsettings/")
+
+def clearDatabase(request):
+    if Anime.objects.all().count() > 0:
+        Anime.objects.all().delete()
+    return HttpResponseRedirect("/adminsettings/")
 
 def addAnime(request):
     if request.user.is_authenticated:
@@ -231,20 +248,49 @@ def deleteAnime(request, animeID):
     else:
         return HttpResponseRedirect("/access_denied/")
 
-def isLoggedIn(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    User = authenticate(request, username=username, password=password)
+#--------BASIC PAGE DISPLAYS---------------
 
-    return render(request, 'animes/all.html', {
-        "animes": User
+def landingPage(request):
+    animeCount = Anime.objects.all().count()
+    if animeCount > 0:
+        imgCount = Anime.objects.exclude(photoCover__iexact="").count()
+        if imgCount > 5:
+            animeImgs = []
+            for i in range(0, 5):
+                randNum = randint(0, imgCount - 1)
+                animeObj = Anime.objects.exclude(photoCover__iexact="")[randNum]
+                while animeObj in animeImgs:
+                    randNum = randint(0, imgCount - 1)
+                    animeObj = Anime.objects.exclude(photoCover__iexact="")[randNum]
+                animeImgs.append(animeObj)
+
+            return render(request, 'animes/landing.html', {
+                "animes" : animeCount,
+                "animeImgs": animeImgs
+            })
+    return render(request, 'animes/landing.html', {
+        "animes" : animeCount
+    })
+
+def loadTablePage(request):
+    if request.user.is_authenticated:
+        return render(request, 'animes/table.html')
+    else:
+        return HttpResponseRedirect("/access_denied/")
+
+def singlePage(request, animeID):
+    result = Anime.objects.get(id = animeID)
+    return render(request, "animes/singleAnime.html", {
+        "anime": result
     })
 
 def adminSettings(request):
     if request.user.is_authenticated:
         dataCount = Anime.objects.all().count()
+        imgCount = Anime.objects.filter(photoCover__iexact="").count()
         return render(request, 'animes/adminPage.html', {
-            "data": dataCount
+            "data": dataCount,
+            "imgCount": imgCount
         })
     else:
         return render(request, 'access_denied.html')

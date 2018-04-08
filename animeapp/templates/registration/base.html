@@ -17,16 +17,13 @@
     {% block navbar %}
     {% endblock %}
 
-    {% block content %}
-    <ul class="sidebar-nav">
-      {% if user.is_authenticated %}
-      <li>User: {{ user.get_username }}</li>
-      <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>   
-      {% else %}
-      <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>   
-      {% endif %} 
-    </ul>
-    {% endblock %}
+    <div class="container center">
+        {% block content %}
+        {% endblock %}
+        <br>
+        <br>
+        <br id="contentEnd">
+    </div>
     <script src="{% static 'js/main.js' %}"></script>
     {% block js %}{% endblock %}
 </body>

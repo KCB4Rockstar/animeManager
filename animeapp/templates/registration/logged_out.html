@@ -1,5 +1,16 @@
 {% extends "registration/base.html" %}
 
 {% block content %}
-<p class="w center">Logged out!</p>
+<br><br>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Logged out!</h5>
+        <p class="card-text">
+            You no longer have permission to modify the database or anime records.
+            <br>
+            Please sign in if you are authenticated or return to browsing the animes.</p>
+        <a href = "{% url 'login' %}"><button type = "button" class = "btn btn-primary">Login</button></a>
+        <a href = "/catalog/"><button type = "button" class = "btn btn-danger">Return</button></a>
+    </div>
+</div>
 {% endblock %}

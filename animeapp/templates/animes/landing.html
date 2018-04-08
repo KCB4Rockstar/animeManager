@@ -17,9 +17,56 @@
 <br>
 <br>
 <div class="row">
-    <p class="heading">Enjoy browsing a large database of over 12000 animes of a wide variety.</p>
+    <p class="minaFont w">Enjoy browsing a large database of {{animes}} animes of a wide variety.</p>
 </div>
 <div class="row">
-    <a href="/catalog/" class="bg_blue"><div class="btn btn-primary f100 center">Enter Site</div></a>
+    <a href="{% url 'catalog' %}" class="bg_blue"><div class="btn btn-primary f100 center">Enter Site</div></a>
 </div>
+<br>
+{% if animeImgs %}
+<div id="animeCarousel" class="carousel slide" data-ride="carousel" data-interval=3000>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <a href="/catalog/anime/{{animeImgs.0.id}}">
+                <img class="d-block" src="{{animeImgs.0.photoCover}}" alt="{{ animeImgs.0.name }}">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>{{animeImgs.0.name}}</h5>
+                </div>
+            </a>
+        </div>
+        <div class="carousel-item">
+            <a href="/catalog/anime/{{animeImgs.1.id}}">
+                <img class="d-block" src="{{animeImgs.1.photoCover}}" alt="{{ animeImgs.1.name }}">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>{{animeImgs.1.name}}</h5>
+                </div>
+            </a>
+        </div>
+        <div class="carousel-item">
+            <a href="/catalog/anime/{{animeImgs.2.id}}">
+                <img class="d-block" src="{{animeImgs.2.photoCover}}" alt="{{ animeImgs.2.name }}">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>{{animeImgs.2.name}}</h5>
+                </div>
+            </a>
+        </div>
+        <div class="carousel-item">
+            <a href="/catalog/anime/{{animeImgs.3.id}}">
+                <img class="d-block" src="{{animeImgs.3.photoCover}}" alt="{{ animeImgs.3.name }}">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>{{animeImgs.3.name}}</h5>
+                </div>
+            </a>
+        </div>
+        <div class="carousel-item">
+            <a href="/catalog/anime/{{animeImgs.4.id}}">
+                <img class="d-block" src="{{animeImgs.4.photoCover}}" alt="{{ animeImgs.4.name }}">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>{{animeImgs.4.name}}</h5>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

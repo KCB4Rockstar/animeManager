@@ -16,14 +16,52 @@
     </div>
 </div>
 
-<div class="row w">
-    <form method = "POST">
-  		{% csrf_token %}
-    	{{ update_form.as_p }}
+<div class="form-inline" align="center">
+    <form method = "POST" class="control-group">{% csrf_token %}
 
-    	<button type = "submit" class = "btn btn-primary">Update</button>
-    	<button type = "reset" value = "reset" class = "btn btn-caution">Cancel</button>
-    </form>
+<div class= "form-control minaFont">
+    
+    <div class="fieldWrapper">   
+        <label for="{{ form.subject.id_for_label }}">Name</label>
+        {{ update_form.name }}
+    </div>
+
+    <div class="fieldWrapper">   
+            <label for="{{ form.subject.id_for_label }}">Genre</label>
+            {{ update_form.genre }}
+        </div>
+
+    <div class="fieldWrapper">   
+        <label for="{{ form.subject.id_for_label }}">Anime Type</label>
+        {{ update_form.animeType }}
+    </div>
+
+    <div class="fieldWrapper">   
+            <label for="{{ form.subject.id_for_label }}">Episodes</label>
+            {{ update_form.episodes }}
+        </div>
+    
+    <div class="fieldWrapper">   
+        <label for="{{ form.subject.id_for_label }}">Rating</label>
+        {{ update_form.rating }}
+    </div>
+
+    <div class="fieldWrapper">   
+        <label for="{{ form.subject.id_for_label }}">Members</label>
+        {{ update_form.members }}
+    </div>
+
+    <div class="fieldWrapper mgL-20">   
+        <label for="{{ form.subject.id_for_label }}">Cover Photo</label>
+        {{ update_form.photoCover }}
+    </div>
+    <br>
+    <button type = "submit" value = "submit" class = "btn btn-primary">Update Anime</button>
+    <a href="/adminsettings/"> 
+        <button class="btn btn-danger">Cancel</button>
+    </a>
 </div>
+</form>
+</div>>
 {% endblock %}
 

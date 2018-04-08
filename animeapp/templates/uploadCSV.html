@@ -1,0 +1,26 @@
+{% extends 'animes/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+- Upload CSV
+{% endblock %}
+
+{% block navbar %}
+{% include "navbar.html" with active='admin' %}
+{% endblock %}
+
+{% block content %}
+<br><br>
+<div class="card text-center col-lg-6 col-lg-offset-3 col-xs-12">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="csvFile" class="minaFont">Select CSV</label>
+      <input class="form-control" type="file" name="csvFile" id="csvFile">
+      <br>
+      <button class="btn btn-primary" type="submit">Upload</button>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

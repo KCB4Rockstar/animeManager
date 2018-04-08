@@ -7,15 +7,15 @@
     <div class="collapse navbar-collapse minaFont" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="{% if active == 'catalog' %} active {% endif %}nav-item">
-                <a class="nav-link" href="/catalog/">Catalog {% if active == 'catalog' %} <span class="sr-only">(current)</span> {% endif %}</a>
+                <a class="nav-link" href="{% url 'catalog' %}">Catalog {% if active == 'catalog' %} <span class="sr-only">(current)</span> {% endif %}</a>
             </li>
             {% if user.is_authenticated %}
             <li class="{% if active == 'admin' or active == 'add' or active == 'edit' or active == 'delete' %} active {% endif %}nav-item">
-                <a class="nav-link" href="/adminsettings/">Admin Options {% if active == 'admin' %} <span class="sr-only">(current)</span> {% endif %}</a>
+                <a class="nav-link" href="{% url 'admin_settings' %}">Admin Options {% if active == 'admin' %} <span class="sr-only">(current)</span> {% endif %}</a>
             </li>
             {% if active == 'add' %}
             <li class="{% if active == 'add' %} active {% endif %}nav-item">
-                    <a class="nav-link" href="/add/">Add Anime {% if active == 'add' %} <span class="sr-only">(current)</span> {% endif %}</a>
+                    <a class="nav-link" href="#">Add Anime {% if active == 'add' %} <span class="sr-only">(current)</span> {% endif %}</a>
             </li>
             {% endif %}
             {% if active == 'edit' %}
@@ -25,7 +25,7 @@
             {% endif %}
             {% if active == 'delete' %}
             <li class="active nav-item">
-                    <a class="nav-link" href="/delete/">Delete Anime<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="#">Delete Anime<span class="sr-only">(current)</span></a>
             </li>
             {% endif %}
             {% endif %}

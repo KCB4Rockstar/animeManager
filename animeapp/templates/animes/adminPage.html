@@ -15,33 +15,59 @@
         <h2 class="content-heading">Admin Options</h2>
     </div>
 </div>
+<br><br>
 <div class="row">
-    <a href="/catalog/add/">
-        <div class="btn btn-primary">Add New Anime</div>
-    </a>
-    {% if data > 0 %}
-    <a href="#" class="disabled">
-        <div class="btn btn-warning">Database already loaded</div>
-    </a>
-    {% else %}
-    <a href="/data/refresh/">
-        <div class="btn btn-primary">Load Database</div>
-    </a>
-    {% endif %}
-    {% if data > 0 %}
-    <a href="/data/images">
-        <div class="btn btn-primary">Load Database Images</div>
-    </a>
-    {% else %}
-    <a href="#" class="disabled">
-        <div class="btn btn-warning">Database Empty</div>
-    </a>
-    {% endif %}
-    <a href="/data/clear/">
-        <div class="btn btn-primary">Clear Database</div>
-    </a>
-    <a href="/table/">
-        <div class="btn btn-primary">View CSV File</div>
-    </a>
-</div>
+    <div class="col-lg-12 adminOptions">
+        <h3>Anime: </h3>
+        <a href="{% url 'add_anime' %}">
+            <div class="btn btn-primary">Add New Anime</div>
+        </a>
+    </div>
+    <div class="col-lg-12 adminOptions">
+        <h3>Database: </h3>
+        <a href="{% url 'read_CSV_to_database' %}">
+            {% if data > 0 %}
+            <div class="btn btn-warning">Animes loaded (Reload?)</div>
+            {% else %}
+            <div class="btn btn-primary">Load Animes</div>
+            {% endif %}
+        </a>
+        {% if data > 0 %}
+        <a href="{% url 'retrieve_images' %}">
+            <div class="btn btn-primary">Reload Anime Images</div>
+        </a>
+        {% else %}
+        <a href="#" class="disabled">
+            <div class="btn btn-warning">Database Empty</div>
+        </a>
+        {% endif %}
+        <div class="btn btn-danger" data-toggle="modal" data-target="#clearAnimes">Clear Animes</div>
+        <div class="modal fade" id="clearAnimes" tabindex="-1" role="dialog">
+            <br><br>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Clear Anime Database</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="minaFont">Are you sure you want to delete all animes in the database?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{% url 'clear_database' %}"><button type="button" class="btn btn-danger">Delete</button></a>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="minaFont w">Status: Animes ({{data}}), Without Images ({{ imgCount }})</p>
+    </div>
+    <div class="col-lg-12 adminOptions">
+        <h3>CSV: </h3>
+        <a href="{% url 'view_CSV' %}">
+            <div class="btn btn-info">View CSV File</div>
+        </a>
+        <a href="{% url 'upload_CSV' %}">
+            <div class="btn btn-primary">Upload CSV File</div>
+        </a>
+    </div>
 {% endblock  %}
