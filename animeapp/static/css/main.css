@@ -197,7 +197,12 @@ body{
     color: white;
 }
 
-table, td {
+table{
+    width: 100%;
+    font-size: 10px;
+}
+
+td {
     border: 1px solid white;
     color: white;
 }

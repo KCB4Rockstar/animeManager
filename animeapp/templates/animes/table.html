@@ -11,20 +11,8 @@
 
 {% block content %}
 <table id = "table">
-    <thead>
-        <tr>
-            <td> anime id </td>
-            <td> Name</td>
-            <td> Genre</td>
-            <td> Type</td>
-            <td> Episodes</td>
-            <td> Rating</td>
-            <td> Members </td>
-        </tr>
-    </thead>
-    <tbody id = "body">
-        
-    </tbody>
+    <thead id="headers"></thead>
+    <tbody id = "body"></tbody>
 </table>
 <script src = "{% static 'js/readData.js' %}"></script>
 {% endblock %}

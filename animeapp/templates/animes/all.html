@@ -18,7 +18,7 @@
 <br>
 <br>
 <div class="row sticky-top" id="catalogMenu">
-    {% if animes %}
+    {% if animes and animes.0 != -1 %}
     <ul class="sortList minaFont d-none d-lg-block">
         <li><h4>Sort By:</h4></li>
         <a href="/catalog/" class="sortButton">
@@ -46,10 +46,30 @@
             <button class="btn btn-primary center">Search</button>
         </div>
     </form>
+    {% elif animes.0 == -1 %}
+    <div class="col-md-6 w">
+        <div class="row-md-12 text-center">
+            <h1>No results.</h1>
+            <p>Sorry, there were no anime found with "{{animes.1}}" in the name.<br>Try another keyword?</p> 
+        </div>
+        <br> <hr>
+        <div class="row-md-12">
+            <form action="/catalog/search/" placeholder = "Search Animes...">
+                <input type="text" id="searchBar" class = "form-control" name="searchBar" placeholder="Search Animes..."> <br>
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-primary center" type = "submit" value = "submit">Search</button>
+                    <button class = "btn btn-danger center" type = "reset" value = "reset">Cancel</button>
+                    <a href="/catalog/"><button class = "btn btn-info center">Back to home </button></a> <br> <br>
+                    <img class = "width500" src = "{% static 'img/anime404.jpg' %}" alt="404 Pic not found... Error 404 inception :(">
+                </div>
+            </form>
+        </div> <br>
+    </div>    
     {% else %}
-    <p class="minaFont heading">There are currently no animes to show.<br>If you are an administrator, view your admin settings to load the database.</p>
+    <p class="minaFont heading">There are currently no animes to show.<br>If you are an administrator, view your Admin Options to load the database.</p>
     {% endif %}
 </div>
+{% if animes and animes.0 != -1 %}
 <br>
 <div class="card-deck">
     {% for anime in animes %}
@@ -114,4 +134,5 @@
     </div>
     {% endfor %}
 </div>
+{% endif %}
 {% endblock %}

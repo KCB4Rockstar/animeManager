@@ -71,7 +71,10 @@ class viewAnimesBySearch(generic.ListView):
 
     def get_queryset(self):
         querystring = self.request.GET.get("searchBar")
-        return Anime.objects.filter(name__icontains = querystring)
+        searchReturn = Anime.objects.filter(name__icontains = querystring)
+        if searchReturn.count() > 0:
+            return Anime.objects.filter(name__icontains = querystring)
+        return [-1, querystring]
 
 
 #----------FILE MANIPULATION FUNCTIONS---------
@@ -96,7 +99,7 @@ def readCSVtoDatabase(request):
         records.append(val)
     
     for i in range(1, len(records)):
-        if(len(records[i])==7):
+        if(len(records[i])>=7):
             existing = Anime.objects.filter(name__iexact=records[i][1].replace("&#039;","'")).count()
             if(existing==0):
                 if(records[i][2]==""):
@@ -121,7 +124,12 @@ def readCSVtoDatabase(request):
                     mems = int(records[i][6])
                 else:
                     mems = -1
-                obj = Anime.objects.create(name=records[i][1].replace("&#039;","'"), genre=g, animeType=t, episodes=eps, rating=rate, members=mems)
+                
+                if len(records[i])>7:
+                    if records[i][7] != "":
+                        obj = Anime.objects.create(name=records[i][1].replace("&#039;","'"), genre=g, animeType=t, episodes=eps, rating=rate, members=mems, photoCover=records[i][7])
+                    else:
+                        obj = Anime.objects.create(name=records[i][1].replace("&#039;","'"), genre=g, animeType=t, episodes=eps, rating=rate, members=mems)
                 obj.save()
 
     return HttpResponseRedirect("/adminsettings/")
@@ -159,26 +167,24 @@ def loadTable(request):
 #---------DATABASE MANIPULATION FUNCTIONS----------
 
 def loadImages(request):
-    queryAnimes = Anime.objects.filter(photoCover__iexact = "")
-    animes = []
-    for i in queryAnimes:
-        animes.append(i)
+    animes = list(reversed(Anime.objects.filter(photoCover__iexact = "")))
     
     for i in range(0, len(animes)):
         if animes[i].photoCover == "":
-            try:
-                obj = Anime.objects.get(id = animes[i].id)
-                searchName = re.sub('[^A-Za-z0-9]+', '', obj.name)
-                searchName = searchName.split()
-                searchName='+'.join(searchName)
-                url = "http://www.google.com/search?q="+searchName+"+anime+picture"+"&tbm=isch"
-                headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-                
-                img = BeautifulSoup(urlopen(Request(url,headers=headers)),'html.parser').find("div",{"class":"rg_meta"})
-                imgURL = json.loads(img.text)["ou"]
-                obj.photoCover = imgURL
-            except:
-                obj.photoCover = ""
+            #try:
+            obj = Anime.objects.get(id = animes[i].id)
+            searchName = re.sub('[^A-Za-z0-9]+', '', obj.name)
+            searchName = searchName.split()
+            searchName='+'.join(searchName)
+            url = "http://www.google.com/search?q="+searchName+"+anime+picture"+"&tbm=isch"
+            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+            
+            img = BeautifulSoup(urlopen(Request(url,headers=headers)),'html.parser').find("div",{"class":"rg_meta"})
+            imgURL = json.loads(img.text)["ou"]
+            obj.photoCover = imgURL
+            # except:
+            #     print("failed to get image")
+            #     obj.photoCover = ""
             obj.save()
 
     return HttpResponseRedirect("/adminsettings/")
@@ -254,7 +260,7 @@ def landingPage(request):
     animeCount = Anime.objects.all().count()
     if animeCount > 0:
         imgCount = Anime.objects.exclude(photoCover__iexact="").count()
-        if imgCount > 5:
+        if imgCount >= 5:
             animeImgs = []
             for i in range(0, 5):
                 randNum = randint(0, imgCount - 1)
@@ -287,10 +293,12 @@ def singlePage(request, animeID):
 def adminSettings(request):
     if request.user.is_authenticated:
         dataCount = Anime.objects.all().count()
-        imgCount = Anime.objects.filter(photoCover__iexact="").count()
+        imgNotCount = Anime.objects.filter(photoCover__iexact="").count()
+        imgCount = Anime.objects.exclude(photoCover__iexact="").count()
         return render(request, 'animes/adminPage.html', {
             "data": dataCount,
-            "imgCount": imgCount
+            "imgCount": imgCount,
+            "imgNotCount": imgNotCount
         })
     else:
         return render(request, 'access_denied.html')

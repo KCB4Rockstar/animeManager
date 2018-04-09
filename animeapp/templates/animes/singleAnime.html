@@ -24,29 +24,11 @@
         <br>
         <h3 class="">Type: {{anime.animeType}}</h3>
         <br>
-        <h3 class="">Episodes: 
-            {% if anime.episodes < 0 %}
-            Unknown
-            {% else %}
-            {{anime.episodes}}
-            {% endif %}
-        </h3>
+        <h3 class="">Episodes: {{anime.episodes}}</h3>
         <br>
-        <h3 class="">Rating: 
-            {% if anime.rating < 0 %}
-            Unknown
-            {% else %}
-            {{anime.rating}}
-            {% endif %}
-        </h3>
+        <h3 class="">Rating: {{anime.rating}}</h3>
         <br>
-        <h3 class="">Members: 
-            {% if anime.members < 0 %}
-            Unknown
-            {% else %}
-            {{anime.members}}
-            {% endif %}
-        </h3>
+        <h3 class="">Members: {{anime.members}}</h3>
         <br>
     </div>
 </div>
@@ -59,7 +41,6 @@
         <a href="/catalog/anime/{{anime.id}}/edit/"> <button type="button" class = "btn btn-primary">Update</button></a>
         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{anime.id}}">Delete</button>
         <div class="modal fade" id="{{anime.id}}" tabindex="-1" role="dialog">
-            <br><br>
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
