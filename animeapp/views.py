@@ -130,7 +130,7 @@ def readCSVtoDatabase(request):
                         obj = Anime.objects.create(name=records[i][1].replace("&#039;","'"), genre=g, animeType=t, episodes=eps, rating=rate, members=mems, photoCover=records[i][7])
                     else:
                         obj = Anime.objects.create(name=records[i][1].replace("&#039;","'"), genre=g, animeType=t, episodes=eps, rating=rate, members=mems)
-                obj.save()
+                    obj.save()
 
     return HttpResponseRedirect("/adminsettings/")
 
@@ -171,20 +171,20 @@ def loadImages(request):
     
     for i in range(0, len(animes)):
         if animes[i].photoCover == "":
-            #try:
-            obj = Anime.objects.get(id = animes[i].id)
-            searchName = re.sub('[^A-Za-z0-9]+', '', obj.name)
-            searchName = searchName.split()
-            searchName='+'.join(searchName)
-            url = "http://www.google.com/search?q="+searchName+"+anime+picture"+"&tbm=isch"
-            headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-            
-            img = BeautifulSoup(urlopen(Request(url,headers=headers)),'html.parser').find("div",{"class":"rg_meta"})
-            imgURL = json.loads(img.text)["ou"]
-            obj.photoCover = imgURL
-            # except:
-            #     print("failed to get image")
-            #     obj.photoCover = ""
+            try:
+                obj = Anime.objects.get(id = animes[i].id)
+                searchName = re.sub('[^A-Za-z0-9]+', '', obj.name)
+                searchName = searchName.split()
+                searchName='+'.join(searchName)
+                url = "http://www.google.com/search?q="+searchName+"+anime+picture"+"&tbm=isch"
+                headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+                
+                img = BeautifulSoup(urlopen(Request(url,headers=headers)),'html.parser').find("div",{"class":"rg_meta"})
+                imgURL = json.loads(img.text)["ou"]
+                obj.photoCover = imgURL
+            except:
+                print("failed to get image")
+                obj.photoCover = ""
             obj.save()
 
     return HttpResponseRedirect("/adminsettings/")
